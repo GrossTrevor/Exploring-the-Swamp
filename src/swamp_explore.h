@@ -26,9 +26,34 @@
 #include <cstdlib>
 #include <vector>
 
-int swampExplorer(std::vector<std::vector<int>> &swamp_maze)
-{
-    // swamp_maze is the 2D grid of the swamp with coffee beans at each location
-    // return the max beans that Albert can collect
-    return 0;
+using std::vector;
+
+int swampExplorer(std::vector<std::vector<int>>& swamp_maze) {
+    int r = swamp_maze.size();
+    int c = swamp_maze[0].size();
+
+    //Create dp vector to size of swamp_maze
+    vector<vector<int>> dp(r, vector<int>(c, 0));
+    dp[0][0] = swamp_maze[0][0];
+
+    //Input total values across the first row
+    for (int i = 1; i < r; i++) {
+        dp[i][0] = dp[i - 1][0] + swamp_maze[i][0];
+    }
+
+    //Input total values down the first column
+    for (int j = 1; j < c; j++) {
+        dp[0][j] = dp[0][j - 1] + swamp_maze[0][j];
+    }
+
+    //Fill in the maze
+    for (int k = 1; k < r; k++) {
+        for (int l = 1; l < c; l++) {
+            if (dp[k - 1][l] >= dp[k][l - 1])
+                dp[k][l] = dp[k - 1][l] + swamp_maze[k][l];
+            else
+                dp[k][l] = dp[k][l - 1] + swamp_maze[k][l];
+        }
+    }
+    return dp[r - 1][c - 1];
 }
